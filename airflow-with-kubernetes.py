@@ -7,7 +7,7 @@ with DAG(
     schedule=None,
     start_date=datetime.now(),
     catchup=False,
-    tags=["test", "my", "up"],
+    tags=["test", "my"],
 ) as dag:
   airflow_with_kubernetes = KubernetesPodOperator(
     name="kubernetes_operator", 
