@@ -7,11 +7,11 @@ with DAG(
     schedule=None,
     start_date=datetime.now(),
     catchup=False,
-    tags=["first", "my", "dag"],
+    tags=["first", "dag"],
 ) as dag:
   airflow_with_kubernetes = KubernetesPodOperator(
     name="kubernetes_operator", 
-    image="registry.localdev.me:5000/dag:latest",
+    image="registry.localdev.me:5000/test:latest",
     cmds=["python"],
     arguments=["main.py"],
     task_id="run-pod",
