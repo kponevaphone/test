@@ -11,7 +11,7 @@ with DAG(
 ) as dag:
   airflow_with_kubernetes = KubernetesPodOperator(
     name="kubernetes_operator", 
-    image="docker-registry.docker-registry.svc.cluster.local:5000/dag:latest",
+    image="kponeva/dag:latest",
     cmds=["python"],
     arguments=["main.py"],
     task_id="run-pod",
