@@ -3,15 +3,15 @@ from datetime import datetime
 from airflow import DAG
 
 with DAG(
-    dag_id="airflow",
+    dag_id="first",
     schedule=None,
     start_date=datetime.now(),
     catchup=False,
-    tags=["test", "my"],
+    tags=["first", "my", "dag"],
 ) as dag:
   airflow_with_kubernetes = KubernetesPodOperator(
     name="kubernetes_operator", 
-    image="kponeva/dag:latest",
+    image="registry.localdev.me:5000/dag:latest",
     cmds=["python"],
     arguments=["main.py"],
     task_id="run-pod",
