@@ -15,7 +15,6 @@ RUN pip3 install --upgrade pip
 RUN pip3 install minio defisheye requests boto3
 #RUN pip3 install ultralytics imgaug influxdb-client opencv-python defisheye
 # Для обеспечения безопасности переключаем пользователя на непривилигированного
-ADD ./main.py ./
-ADD ./file.py ./
+ADD ./*.py ./
 
 #USER 1001
