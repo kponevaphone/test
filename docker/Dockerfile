@@ -11,10 +11,11 @@ RUN mkdir /app
 # Назначаем рабочую директорию
 WORKDIR /app
 # Добавляем скрипт в файловую систему образа
-ADD ./main.py ./
-
 RUN pip3 install --upgrade pip
-RUN pip3 install minio defisheye
+RUN pip3 install minio defisheye requests boto3
 #RUN pip3 install ultralytics imgaug influxdb-client opencv-python defisheye
 # Для обеспечения безопасности переключаем пользователя на непривилигированного
-USER 1001
+ADD ./main.py ./
+ADD ./file.py ./
+
+#USER 1001

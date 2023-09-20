@@ -34,3 +34,6 @@ os.remove(ptf)
 #s3.Bucket('songs').download_file('piano.mp3', '/tmp/classical.mp3')
 
 print ("upload 'file.jpg' as  finale")
+
+
+ 
