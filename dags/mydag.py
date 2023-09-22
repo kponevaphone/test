@@ -13,21 +13,21 @@ with DAG(
     name="kubernetes_operator", 
     image="registry.localdev.me:5000/test:latest",
     cmds=["python"],
-    arguments=["main.py"],
+    arguments=["main1.py"],
     task_id="run-pod1",
 )
   second_task = KubernetesPodOperator(
     name="kubernetes_operator", 
     image="registry.localdev.me:5000/test:latest",
     cmds=["python"],
-    arguments=["main.py"],
+    arguments=["main2.py"],
     task_id="run-pod2",
 )
   three_task = KubernetesPodOperator(
     name="kubernetes_operator", 
     image="registry.localdev.me:5000/test:latest",
     cmds=["python"],
-    arguments=["main.py"],
+    arguments=["main3.py"],
     task_id="run-pod3",
 )
 
