@@ -16,6 +16,7 @@ if rescam.status_code == 200:
         shutil.copyfileobj(rescam.raw, f)
 
 
+
 s3 = boto3.resource('s3',
                     endpoint_url='http://minio.localdev.me',
                     aws_access_key_id='XB99WjybqXeYFmUIZ85b',
