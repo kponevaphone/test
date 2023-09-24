@@ -9,7 +9,14 @@ with DAG(
     catchup=False,
     tags=["first", "dag"],
 ) as dag:
-  airflow_with_kubernetes = KubernetesPodOperator(
+  airflow1 = KubernetesPodOperator(
+    name="kubernetes_operator", 
+    image="registry.localdev.me:5000/test:latest",
+    cmds=["python"],
+    arguments=["main.py"],
+    task_id="run-pod",
+)
+  airflow2 = KubernetesPodOperator(
     name="kubernetes_operator", 
     image="registry.localdev.me:5000/test:latest",
     cmds=["python"],
@@ -17,4 +24,4 @@ with DAG(
     task_id="run-pod",
 )
 
-airflow_with_kubernetes.dry_run()
+airflow1.dry_run() 
