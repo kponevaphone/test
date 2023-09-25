@@ -10,7 +10,10 @@ from requests.auth import HTTPDigestAuth
 from defisheye import Defisheye
 from ultralytics import YOLO
 
-
+with open('/etc/hosts', 'a') as f:
+    f.write('192.168.243.10    minio.localdev.me\n')
+    f.write('192.168.243.10    influxdb.localdev.me\n')
+ 
 
 current_time = datetime.datetime.now()
 time_stamp = current_time.timestamp()
