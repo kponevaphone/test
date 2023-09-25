@@ -1,22 +1,26 @@
 # Задаём имя базового образа, в котором есть интерпретатор Python 
 FROM python
 
-# builder-base is used to build dependencies
-RUN apt-get update && apt-get upgrade -y \ 
-        && apt-get install --no-install-recommends -y \
-        curl \
-        vim
+# For more information, please refer to https://aka.ms/vscode-docker-python
+ENV VAR1=10
 
-RUN mkdir /app 
-# Назначаем рабочую директорию
+# Keeps Python from generating .pyc files in the container
+ENV PYTHONDONTWRITEBYTECODE=1
+
+# Turns off buffering for easier container logging
+ENV PYTHONUNBUFFERED=1
+
+# Install & use pipenv
+COPY Pipfile Pipfile.lock ./
+RUN python -m pip install --upgrade pip
+RUN pip install pipenv && pipenv install --dev --system --deploy
+
 WORKDIR /app
-# Добавляем скрипт в файловую систему образа
-RUN pip3 install --upgrade pip
-RUN pip3 install minio requests boto3 ultralytics imgaug influxdb-client opencv-python defisheye
-#RUN pip3 install ultralytics imgaug influxdb-client opencv-python defisheye
-#RUN pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+COPY . /app
 
-# Для обеспечения безопасности переключаем пользователя на непривилигированного
-ADD ./*.py ./
+# Creates a non-root user and adds permission to access the /app folder
+#RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
+#USER appuser
 
-#USER 1001
+# During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
+#CMD ["python", "main.py"]

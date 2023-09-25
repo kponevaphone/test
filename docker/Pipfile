@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+boto3 = "*"
+minio = "*"
+requests = "*"
+ultralytics = "*"
+imgaug = "*"
+influxdb-client = "*"
+opencv-python = "*"
+defisheye = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"
