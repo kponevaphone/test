@@ -2,6 +2,10 @@ import  os, time, base64, requests, shutil, random, boto3, uuid, datetime
 from botocore.client import Config
 from requests.auth import HTTPDigestAuth
 
+with open('/etc/hosts', 'a') as f:
+    f.write('192.168.243.10    minio.localdev.me\n')
+    f.write('192.168.243.10    influxdb.localdev.me\n')
+ 
 current_time = datetime.datetime.now()
 time_stamp = current_time.timestamp()
 #date_time = datetime.datetime.fromtimestamp(time_stamp)

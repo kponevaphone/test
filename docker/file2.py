@@ -2,6 +2,9 @@ import  os, time, base64, requests, shutil, random, boto3, uuid, datetime
 from botocore.client import Config
 from requests.auth import HTTPDigestAuth
 
+with open('/etc/hosts', 'a') as f:
+    f.write('192.168.243.10    minio.localdev.me\n')
+    f.write('192.168.243.10    influxdb.localdev.me\n')
 
 s3 = boto3.resource('s3',
                     endpoint_url='http://minio.localdev.me',
