@@ -30,7 +30,4 @@ def download_folder(bucket_name, s3_folder, local_dir=None):
 s3.Bucket('test').download_file('1695185536.642843.jpg', '/tmp/filed.jpg')
 download_folder('test', 'dir', '/tmp/dir')
 
-print ("download 'file.jpg' as  finale")
-
-
- 
+print ("download 'file.jpg' as  finale") 
