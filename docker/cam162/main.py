@@ -10,7 +10,11 @@ import influxdb_client, os, time
 from influxdb_client import InfluxDBClient, Point, WritePrecision
 from influxdb_client.client.write_api import SYNCHRONOUS
 
-
+###ADD hosts to etc
+with open('/etc/hosts', 'a') as f:
+    f.write('192.168.243.10    minio.localdev.me\n')
+    f.write('192.168.243.10    influxdb.localdev.me\n')
+ 
 
 def myfun(pth):
     print(pth[:-4])
@@ -44,12 +48,14 @@ def myfun2(pth):
     return len(boxes)
 
 def myfun3(pth, le):
-    token = "EbPGslDdSFMtUsTKWXUBOfabTG1xPkJwo1nTyn558u7mqluzzuLQ93ZMX2_MIrERM-oedY738kQa2VJRIwzAog=="
+    token = "cGG4qR3-NxP_CsR9l9CTlKkBfdKgTP9GkpTDOR0f1ZFF-2k-DwHXU9OYKVA3nh3zpwgINE94k-DfDHN0Mcmfog=="
     org = "primary"
     url = "http://influxdb.localdev.me"
 
-    with open(pth, 'rb') as img_file:
-        my_string = base64.b64encode(img_file.read())
+    with open(pth, 'rb') as binary_file:
+        binary_file_data = binary_file.read()
+        base64_encoded_data = base64.b64encode(binary_file_data)
+        base64_message = base64_encoded_data.decode('utf-8')
 
     write_client = influxdb_client.InfluxDBClient(url=url, token=token, org=org)
     bucket="primary"
@@ -59,8 +65,8 @@ def myfun3(pth, le):
     point = (
     Point("cams")
     # .tag(random.randint(1, 5), "cnt")
-    .field("cnt", le)
-    .field("img", str(my_string))
+    .field("cnt", int(le))
+    .field("img", str(base64_message))
     )
     write_api.write(bucket=bucket, org="primary", record=point)
     time.sleep(1) # separate points by 1 second
