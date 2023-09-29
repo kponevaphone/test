@@ -16,6 +16,21 @@ with open('/etc/hosts', 'a') as f:
     f.write('192.168.243.10    influxdb.localdev.me\n')
  
 
+def myfun0(pth):
+    ### Get file
+    current_time = datetime.datetime.now()
+    time_stamp = current_time.timestamp()
+    #date_time = datetime.datetime.fromtimestamp(time_stamp)
+
+    urlcam='http://192.168.100.170/ISAPI/Streaming/channels/1/picture?snapShotImageType=JPEG'
+    passcam = 'q12345678'
+    usercam = 'admin'
+    rescam = requests.get(urlcam, auth=HTTPDigestAuth(str(usercam), str(passcam)), stream = True)
+    if rescam.status_code == 200:
+        with open(pth,'wb') as f:
+            shutil.copyfileobj(rescam.raw, f)
+
+
 def myfun(pth):
     print(pth[:-4])
     print(pth)
@@ -43,7 +58,7 @@ def myfun(pth):
 def myfun2(pth):
     model1 = YOLO('/app/best.pt')
     im1 = Image.open(pth)
-    results = model1.predict(source=im1, save=True, show_labels=False, show_conf=False)  # save plotted images
+    results = model1.predict(source=im1, save=True, show_labels=True, show_conf=True, max_det=4)  # save plotted images
     boxes = results[0].boxes.data
     return len(boxes)
 
@@ -74,9 +89,16 @@ def myfun3(pth, le):
 
 
 pt = '/app/picture.jpg'
+myfun0(pt)
 myfun(pt)
 pt = '/app/picture_1.jpg'
 my = myfun2(pt)
 pt = '/app/runs/detect/predict/picture_1.jpg'
 Image.open(pt).rotate(-90).save(pt)
 myfun3(pt, my)
+# pt = '/app/runs/detect/predict/picture_2.jpg'
+# myfun3(pt, my)
+# pt = '/app/runs/detect/predict/picture_3.jpg'
+# myfun3(pt, my)
+# pt = '/app/runs/detect/predict/picture_4.jpg'
+
