@@ -5,7 +5,7 @@ from airflow import DAG
 
 with DAG(
     dag_id="162",
-    schedule=True,
+    schedule='*/2 * * * *',
     start_date=datetime.now(),
     catchup=True,
     # schedule_interval='*/2 * * * *',
