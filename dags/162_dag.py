@@ -6,7 +6,7 @@ from airflow import DAG
 with DAG(
     dag_id="162",
     start_date=datetime(2023, 9, 30),
-    schedule_interval='*/2 * * * *',
+    schedule='*/2 * * * *',
     catchup=False,
     max_active_runs=1,
     # schedule_interval='*/2 * * * *',
