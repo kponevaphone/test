@@ -3,15 +3,13 @@ from datetime import datetime
 from airflow import DAG
 
 
-default_args = {
-  'schedule_interval': '*/1 * * * *' #..every 10 minutes
-}
-
 with DAG(
     dag_id="162",
     schedule=None,
     start_date=datetime.now(),
-    catchup=False,
+    catchup=True,
+    schedule_interval='*/2 * * * *',
+
     tags=["cam", "162"],
 ) as dag:
   first_task_main = KubernetesPodOperator(
