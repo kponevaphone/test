@@ -1,4 +1,4 @@
-import  os, time, base64, requests, shutil, random, boto3, uuid, datetime
+import  os, time, base64, requests, shutil, random, boto3, uuid, datetime, re, regex
 from botocore.client import Config
 from requests.auth import HTTPDigestAuth
 from defisheye import Defisheye

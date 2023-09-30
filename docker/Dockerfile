@@ -13,6 +13,7 @@ RUN pip3 install --upgrade pip
 RUN pip3 install minio requests boto3 ultralytics imgaug influxdb-client opencv-python defisheye
 #RUN pip3 install ultralytics imgaug influxdb-client opencv-python defisheye
 RUN pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+RUN pip3 install regex
 
 # Для обеспечения безопасности переключаем пользователя на непривилигированного
 COPY cam162 ./

@@ -1,4 +1,4 @@
-import  os, time, base64, requests, shutil, random, uuid, datetime, socket
+import  os, time, base64, requests, shutil, random, uuid, datetime, socket, influxdb_client
 from PIL import Image 
 from os import path
 from influxdb_client import InfluxDBClient, Point, WritePrecision
@@ -6,9 +6,7 @@ from influxdb_client.client.write_api import SYNCHRONOUS
 from requests.auth import HTTPDigestAuth
 from defisheye import Defisheye
 from ultralytics import YOLO
-import influxdb_client, os, time
-from influxdb_client import InfluxDBClient, Point, WritePrecision
-from influxdb_client.client.write_api import SYNCHRONOUS
+
 
 ###ADD hosts to etc
 with open('/etc/hosts', 'a') as f:
@@ -16,7 +14,7 @@ with open('/etc/hosts', 'a') as f:
     f.write('192.168.243.10    influxdb.localdev.me\n')
  
 
-def myfun0(pth):
+def getfile(pth):
     ### Get file
     current_time = datetime.datetime.now()
     time_stamp = current_time.timestamp()
@@ -30,8 +28,7 @@ def myfun0(pth):
         with open(pth,'wb') as f:
             shutil.copyfileobj(rescam.raw, f)
 
-
-def myfun(pth):
+def cropimg(pth):
     print(pth[:-4])
     print(pth)
     pt0=f"{pth[:-4]}_0.jpg"
@@ -55,50 +52,91 @@ def myfun(pth):
     Image.open(pt0).crop((1480, 590, 1800, 910)).save(jp4)
     Image.open(jp4).resize((640, 640)).save(jp4)
 
-def myfun2(pth):
-    model1 = YOLO('/app/best.pt')
-    im1 = Image.open(pth)
-    results = model1.predict(source=im1, save=True, show_labels=True, show_conf=True, max_det=4)  # save plotted images
-    boxes = results[0].boxes.data
-    return len(boxes)
+def aipredict():
+    chph = {}
+    path = os.getcwd()
+    # чтение записей
+    with os.scandir(path) as listOfEntries:  
+        for entry in listOfEntries:
+            # печать всех записей, являющихся файлами
+            if entry.is_file():
+                if entry.name.endswith('_1.jpg'):
+                    model1 = YOLO('/app/1.pt')
+                    im1 = Image.open(entry.name)
+                    results1 = model1.predict(source=im1, save=True, show_labels=True, show_conf=True, max_det=4)  # save plotted images
+                    boxes1 = len(results1[0].boxes.data)
+                    chph.update({0:boxes1})
+                    # Image.open('runs/detect/predict/orig_1.jpg').rotate(-90).save('runs/detect/predict/orig_1.jpg')
+                    with open('runs/detect/predict/orig_1.jpg', 'rb') as binary_file:
+                        binary_file_data = binary_file.read()
+                        base64_encoded_data = base64.b64encode(binary_file_data)
+                        chph.update({1:base64_encoded_data.decode('utf-8')})
 
-def myfun3(pth, le):
+                shutil.rmtree('runs', ignore_errors=True)
+
+                if entry.name.endswith('_2.jpg'):
+                    model2 = YOLO('/app/2.pt')
+                    im2 = Image.open(entry.name)
+                    results2 = model2.predict(source=im2, save=True, show_labels=True, show_conf=True, max_det=4)  # save plotted images
+                    boxes2 = len(results2[0].boxes.data)
+                    chph.update({2:boxes2})
+
+                    with open('runs/detect/predict/orig_2.jpg', 'rb') as binary_file:
+                        binary_file_data = binary_file.read()
+                        base64_encoded_data = base64.b64encode(binary_file_data)
+                        chph.update({3:base64_encoded_data.decode('utf-8')})
+
+                shutil.rmtree('runs', ignore_errors=True)
+
+                # if entry.name.endswith('_3.jpg'):
+                #     model = YOLO('/app/3.pt')
+                #     im = Image.open(entry.name)
+                #     results = model.predict(source=im, save=True, show_labels=True, show_conf=True, max_det=4)  # save plotted images
+                #     boxes = results[0].boxes.data
+                #     tati.append(len(boxes))
+                # if entry.name.endswith('_4.jpg'):
+                    # model = YOLO('/app/4.pt')
+                    # im = Image.open(entry.name)
+                    # results = model.predict(source=im, save=True, show_labels=True, show_conf=True, max_det=4)  # save plotted images
+                    # boxes = results[0].boxes.data
+                    # tati.append(len(boxes))
+    return chph
+
+def tobase(ptli):
     token = "cGG4qR3-NxP_CsR9l9CTlKkBfdKgTP9GkpTDOR0f1ZFF-2k-DwHXU9OYKVA3nh3zpwgINE94k-DfDHN0Mcmfog=="
     org = "primary"
     url = "http://influxdb.localdev.me"
-
-    with open(pth, 'rb') as binary_file:
-        binary_file_data = binary_file.read()
-        base64_encoded_data = base64.b64encode(binary_file_data)
-        base64_message = base64_encoded_data.decode('utf-8')
-
     write_client = influxdb_client.InfluxDBClient(url=url, token=token, org=org)
     bucket="primary"
     write_api = write_client.write_api(write_options=SYNCHRONOUS)
 
 
     point = (
-    Point("cams")
-    # .tag(random.randint(1, 5), "cnt")
-    .field("cnt", int(le))
-    .field("img", str(base64_message))
-    )
+        Point('162_1')
+        .field('cnt', int(ptli[2]))
+        .field('img', str(ptli[3])),
+        Point('162_2')
+        .field('cnt', int(ptli[0]))
+        .field('img', str(ptli[1])),
+        # Point(tmps[1][0][0])
+        # .field('img', tmps[1][0][1])
+        # .field('cnt', int(tmps[1][0][2])),
+        # Point(tmps[3][0][0])
+        # .field('img', tmps[3][0][1])
+        # .field('cnt', int(tmps[3][0][2])),
+        )
+
     write_api.write(bucket=bucket, org="primary", record=point)
     time.sleep(1) # separate points by 1 second
 
 
 
-pt = '/app/picture.jpg'
-myfun0(pt)
-myfun(pt)
-pt = '/app/picture_1.jpg'
-my = myfun2(pt)
-pt = '/app/runs/detect/predict/picture_1.jpg'
-Image.open(pt).rotate(-90).save(pt)
-myfun3(pt, my)
-# pt = '/app/runs/detect/predict/picture_2.jpg'
-# myfun3(pt, my)
-# pt = '/app/runs/detect/predict/picture_3.jpg'
-# myfun3(pt, my)
-# pt = '/app/runs/detect/predict/picture_4.jpg'
-
+pt = '/app/orig.jpg'
+getfile(pt)
+cropimg(pt)
+chel = aipredict()
+print('\n ##### \n')
+print(chel[2])
+print(chel[0])
+print('\n ##### \n')
+tobase(chel)
