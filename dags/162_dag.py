@@ -9,7 +9,7 @@ with DAG(
     start_date=datetime.now(),
     catchup=True,
     schedule_interval='*/2 * * * *',
-    tags=["cam", "162"],
+    tags=["cam", "162"]
 ) as dag:
   first_task_main = KubernetesPodOperator(
     name="kubernetes_operator", 
