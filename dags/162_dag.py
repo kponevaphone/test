@@ -6,8 +6,9 @@ from airflow import DAG
 with DAG(
     dag_id="162",
     schedule='*/2 * * * *',
-    start_date=datetime.now(),
-    catchup=False,
+    start_date = datetime.now(),
+    schedule_interval = None,
+    catchup = False,
     # schedule_interval='*/2 * * * *',
     tags=["cam", "162"],
 ) as dag:
