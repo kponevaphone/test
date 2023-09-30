@@ -113,11 +113,11 @@ def tobase(ptli):
 
     point = (
         Point('162_1')
-        .field('cnt', int(ptli[2]))
-        .field('img', str(ptli[3])),
-        Point('162_2')
         .field('cnt', int(ptli[0]))
         .field('img', str(ptli[1])),
+        Point('162_2')
+        .field('cnt', int(ptli[2]))
+        .field('img', str(ptli[3])),
         # Point(tmps[1][0][0])
         # .field('img', tmps[1][0][1])
         # .field('cnt', int(tmps[1][0][2])),
