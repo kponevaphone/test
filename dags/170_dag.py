@@ -9,7 +9,7 @@ with DAG(
     schedule='*/5 * * * *',
     catchup=False,
     max_active_runs=1,
-    schedule_interval='*/5 * * * *', 
+    # schedule_interval='*/5 * * * *', 
     tags=["cam", "170"],
 ) as dag:
   first_task_main = KubernetesPodOperator(
