@@ -14,7 +14,7 @@ with DAG(
 ) as dag:
   first_task_main = KubernetesPodOperator(
     name="kubernetes_operator", 
-    image="devubu:5000/pr:latest",
+    image="devubu:5000/cn:latest",
     cmds=["python"],
     arguments=["cn9.py"],
     task_id="run-pod-170cn",
