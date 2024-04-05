@@ -5,11 +5,11 @@ from airflow import DAG
 
 with DAG(
     dag_id="170",
-    start_date=datetime(2024, 4, 5),
+    start_date=datetime(2024, 4, 4),
     schedule='*/5 * * * *',
     catchup=False,
     max_active_runs=1,
-    # schedule_interval='*/5 * * * *', 
+    # schedule_interval='*/2 * * * *', 
     tags=["cam", "170"],
 ) as dag:
   first_task_main = KubernetesPodOperator(
