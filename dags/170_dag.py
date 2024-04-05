@@ -5,7 +5,7 @@ from airflow import DAG
 
 with DAG(
     dag_id="170",
-    start_date=datetime(2023, 9, 30),
+    start_date=datetime(2024, 4, 5),
     schedule='*/2 * * * *',
     catchup=False,
     max_active_runs=1,
@@ -16,7 +16,7 @@ with DAG(
     name="kubernetes_operator", 
     image="devubu:5000/pr:latest",
     cmds=["python"],
-    arguments=["pr7.py"],
+    arguments=["pr9.py"],
     task_id="run-pod-main",
 )
 
