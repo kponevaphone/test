@@ -12,12 +12,19 @@ with DAG(
     # schedule_interval='*/2 * * * *', 
     tags=["cam", "170"],
 ) as dag:
-  first_task_main = KubernetesPodOperator(
+  first_task = KubernetesPodOperator(
     name="kubernetes_operator", 
     image="devubu:5000/pr:latest",
     cmds=["python"],
     arguments=["pr9.py"],
-    task_id="run-pod-main",
+    task_id="pod-first_task",
+)
+  second_task = KubernetesPodOperator(
+    name="kubernetes_operator", 
+    image="devubu:5000/cn:latest",
+    cmds=["python"],
+    arguments=["cn9.py"],
+    task_id="pod-second_task",
 )
 
-first_task_main
+first_task >> second_task
