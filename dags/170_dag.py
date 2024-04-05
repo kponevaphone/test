@@ -17,7 +17,7 @@ with DAG(
     image="devubu:5000/pr:latest",
     cmds=["python"],
     arguments=["pr9.py"],
-    task_id="run-pod-pr",
+    task_id="run-pod-main",
 )
 
 first_task_main
