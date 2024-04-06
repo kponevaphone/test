@@ -10,7 +10,6 @@ with DAG(
     schedule='*/5 * * * *',
     catchup=False,
     max_active_runs=1,
-    cluster_context='nvidia',
     # schedule_interval='*/2 * * * *', 
     tags=["cam", "gpu_test"],
 ) as dag:
@@ -23,6 +22,7 @@ with DAG(
 )  
   second_task = KubernetesPodOperator(
     name="kubernetes_operator", 
+    cluster_context='nvidia',
     image="devubu:5000/cn:latest",
     cmds=["python"],
     arguments=["cn9.py"],
