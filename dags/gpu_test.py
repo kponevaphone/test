@@ -25,7 +25,8 @@ with DAG(
 )  
   second_task = KubernetesPodOperator(
     name="kubernetes_operator", 
-    runtime='nvidia',
+    # runtime='nvidia',
+    cluster_context='nvidia',
     image="devubu:5000/cn:latest",
     cmds=["python"],
     arguments=["cn9.py"],
