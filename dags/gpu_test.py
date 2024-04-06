@@ -3,7 +3,22 @@ from datetime import datetime
 from airflow import DAG
 from kubernetes.client import models as k8s
 
-
+resource_requirements = {
+    "pod_override": k8s.V1Pod(
+        spec=k8s.V1PodSpec(
+            containers=[
+                k8s.V1Container(
+                    name="base",
+                    runtimeClassName="nvidia",
+                    resources=k8s.V1ResourceRequirements(
+                        requests={"cpu": 0.5, "memory": "1024Mi", "nvidia.com/gpu": 1},
+                        limits={"cpu": 0.5, "memory": "1024Mi", "nvidia.com/gpu": 1}
+                    )
+                )
+            ]
+        )
+    )
+}
 
 with DAG(
     dag_id="gpu_test",
@@ -28,7 +43,8 @@ with DAG(
     cmds=["python"],
     arguments=["cn9.py"],
     env_vars={"NVIDIA_VISIBLE_DEVICES": "all", "NVIDIA_DRIVER_CAPABILITIES":"all" }, #"CUDA_VISIBLE_DEVICES":"0"
-    container_resources=k8s.V1ResourceRequirements(requests={'nvidia.com/gpu': 1,}, limits={'nvidia.com/gpu': 1,}),
+    # container_resources=k8s.V1ResourceRequirements(requests={'nvidia.com/gpu': 1,}, limits={'nvidia.com/gpu': 1,}),
+    container_resources=resource_requirements,
     # container_resources=k8s.V1ResourceRequirements(limits={"nvidia.com/gpu": 1},),
     tolerations = [k8s.V1Toleration(key="nvidia.com/gpu", operator="Exists", effect="NoExecute")],
     # Exists
