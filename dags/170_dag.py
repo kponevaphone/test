@@ -19,9 +19,6 @@ resources = (
     }
 ) """
 resources = {
-            'limit_cpu': 0.25,
-            'limit_memory': '64Mi',
-            'limit_ephemeral_storage': '2Gi',
             'request_cpu': '250m',
             'request_memory': '64Mi',
             'request_ephemeral_storage': '1Gi',
