@@ -1,4 +1,4 @@
-from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
+from airflow.providers.cncf.kubernetes.executor.kubernetes_pod import KubernetesExecutor 
 from datetime import datetime
 from airflow import DAG
 from kubernetes.client import models as k8s
@@ -14,14 +14,14 @@ with DAG(
     # schedule_interval='*/2 * * * *', 
     tags=["cam", "gpu_test"],
 ) as dag:
-  first_task = KubernetesPodOperator(
+  first_task = KubernetesExecutor(
     name="kuboper", 
     image="devubu:5000/pr:latest",
     cmds=["python"],
     arguments=["pr9.py"],
     task_id="pod-first_task",
 )  
-  second_task = KubernetesPodOperator(
+  second_task = KubernetesExecutor(
     name="kuboper", 
     # cluster_context='nvidia',
     image="devubu:5000/cn:latest",
