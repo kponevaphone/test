@@ -19,9 +19,9 @@ resources = (
     }
 ) """
 resources = {
-            'request_cpu': '250m',
-            'request_memory': '64Mi',
-            'request_ephemeral_storage': '1Gi',
+            'cpu': '250m',
+            'memory': '64Mi',
+            'nvidia.com/gpu': '1',
 } 
 with DAG(
     dag_id="170",
