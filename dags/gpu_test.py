@@ -4,6 +4,22 @@ from airflow import DAG
 from kubernetes.client import models as k8s
 
 
+
+resources = k8s.V1ResourceRequirements(
+    requests={
+        'memory': '128Mi',
+        'cpu': 0.5,
+        'nvidia.com/gpu': 1,
+        'ephemeral-storage': '1Gi'
+    },
+    limits={
+        'memory': '128Mi',
+        'cpu': 0.5,
+        'nvidia.com/gpu': 1,
+        'ephemeral-storage': '1Gi'
+    }
+)
+
 with DAG(
     dag_id="gpu_test",
     start_date=datetime(2024, 4, 4),
@@ -27,8 +43,9 @@ with DAG(
     cmds=["python"],
     arguments=["cn9.py"],
     env_vars={"NVIDIA_VISIBLE_DEVICES": "all", "NVIDIA_DRIVER_CAPABILITIES":"all", "CUDA_VISIBLE_DEVICES":"0" },
-    container_resources=k8s.V1ResourceRequirements(limits={"nvidia.com/gpu": 1},),
-    tolerations = [k8s.V1Toleration(key="nvidia.com/gpu", operator="Exists", effect="NoSchedule")],
+    container_resources=resources,
+    # container_resources=k8s.V1ResourceRequirements(limits={"nvidia.com/gpu": 1},),
+    # tolerations = [k8s.V1Toleration(key="nvidia.com/gpu", operator="Exists", effect="NoSchedule")],
     task_id="pod-second_task",
 )
 # sudo docker run --rm --runtime=nvidia --gpus all ubuntu nvidia-smi
