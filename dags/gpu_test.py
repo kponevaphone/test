@@ -25,7 +25,7 @@ with DAG(
     # cluster_context='nvidia',
     image="devubu:5000/cn:latest",
     cmds=["python"],
-    arguments=["test.py"],
+    arguments=["cn9.py"],
     env_vars={"NVIDIA_VISIBLE_DEVICES": "all", "NVIDIA_DRIVER_CAPABILITIES":"all", "CUDA_VISIBLE_DEVICES":"0" },
     # container_resources=k8s.V1ResourceRequirements(limits={"nvidia.com/gpu": "1"},),
     container_resources=k8s.V1ResourceRequirements(
