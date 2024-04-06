@@ -3,26 +3,11 @@ from datetime import datetime
 from airflow import DAG
 from kubernetes.client import models as k8s
 
-""" 
-resources = (
-    requests={
-        'memory': '128Mi',
-        'cpu': 0.5,
-        'nvidia.com/gpu': 1,
-        'ephemeral-storage': '1Gi'
-    },
-    limits={
-        'memory': '128Mi',
-        'cpu': 0.5,
-        'nvidia.com/gpu': 1,
-        'ephemeral-storage': '1Gi'
-    }
-) """
-resources = {
-            'cpu': '250m',
-            'memory': '64Mi',
-            'nvidia.com/gpu': '1',
-} 
+compute_resources = k8s.V1ResourceRequirements(
+    limits={"cpu": "800m", "memory": "3Gi"},
+    requests={"cpu": "800m", "memory": "3Gi"}
+)
+
 with DAG(
     dag_id="170",
     start_date=datetime(2024, 4, 4),
@@ -44,9 +29,9 @@ with DAG(
     image="devubu:5000/cn:latest",
     cmds=["python"],
     arguments=["cn9.py"],
-    resources=resources,
     env_vars={"NVIDIA_VISIBLE_DEVICES": "all", "NVIDIA_DRIVER_CAPABILITIES":"all"},
-    #resources={'limit_memory': "250M", 'limit_cpu': "100m"}, #, 'nvidia.com/gpu':"1"},
+    # resources={'limit_memory': "250M", 'limit_cpu': "100m"}, #, 'nvidia.com/gpu':"1"},
+    resources=compute_resources,
     task_id="pod-second_task",
 )
 
