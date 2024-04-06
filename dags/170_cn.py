@@ -5,13 +5,13 @@ from kubernetes.client import models as k8s
 
 
 with DAG(
-    dag_id="170_dag",
+    dag_id="170_cn",
     start_date=datetime(2024, 4, 4),
     schedule='*/5 * * * *',
     catchup=False,
     max_active_runs=1,
     # schedule_interval='*/2 * * * *', 
-    tags=["cam", "170_dag"],
+    tags=["cam", "170_cn"],
 ) as dag:
   first_task = KubernetesPodOperator(
     name="kubernetes_operator", 
