@@ -25,10 +25,10 @@ with DAG(
     # cluster_context='nvidia',
     image="devubu:5000/cn:latest",
     cmds=["python"],
-    arguments=["cn9.py"],
+    arguments=["test.py"],
     env_vars={"NVIDIA_VISIBLE_DEVICES": "all", "NVIDIA_DRIVER_CAPABILITIES":"all", "CUDA_VISIBLE_DEVICES":"0" },
     container_resources=k8s.V1ResourceRequirements(limits={"nvidia.com/gpu": "1"},),
-    tolerations = [k8s.V1Toleration(key="nvidia.com/gpu", value="true", operator="Equal", effect="NoSchedule")],
+    # tolerations = [k8s.V1Toleration(key="nvidia.com/gpu", value="true", operator="Equal", effect="NoSchedule")],
     task_id="pod-second_task",
 )
 # sudo docker run --rm --runtime=nvidia --gpus all ubuntu nvidia-smi
