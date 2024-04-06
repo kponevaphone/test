@@ -3,11 +3,12 @@ from datetime import datetime
 from airflow import DAG
 from kubernetes.client import models as k8s
 
-
-resources = k8s.V1ResourceRequirements(
+""" 
+resources = (
     requests={
         'memory': '128Mi',
         'cpu': 0.5,
+        'nvidia.com/gpu': 1,
         'ephemeral-storage': '1Gi'
     },
     limits={
@@ -16,8 +17,15 @@ resources = k8s.V1ResourceRequirements(
         'nvidia.com/gpu': 1,
         'ephemeral-storage': '1Gi'
     }
-)
-
+) """
+resources = {
+            'limit_cpu': 0.25,
+            'limit_memory': '64Mi',
+            'limit_ephemeral_storage': '2Gi',
+            'request_cpu': '250m',
+            'request_memory': '64Mi',
+            'request_ephemeral_storage': '1Gi',
+} 
 with DAG(
     dag_id="170",
     start_date=datetime(2024, 4, 4),
