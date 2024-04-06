@@ -25,7 +25,7 @@ with DAG(
     cmds=["python"],
     arguments=["cn9.py"],
     env_vars={"NVIDIA_VISIBLE_DEVICES": "all", "NVIDIA_DRIVER_CAPABILITIES":"all"},
-    resources={'limit_memory': "250M", 'limit_cpu': "100m"}, #, 'nvidia.com/gpu':"1"},
+    #resources={'limit_memory': "250M", 'limit_cpu': "100m"}, #, 'nvidia.com/gpu':"1"},
     task_id="pod-second_task",
 )
 
