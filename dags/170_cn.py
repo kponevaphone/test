@@ -27,7 +27,7 @@ with DAG(
     arguments=["cn9.py"],
     env_vars={"NVIDIA_VISIBLE_DEVICES": "all", "NVIDIA_DRIVER_CAPABILITIES":"all", },
     container_resources=k8s.V1ResourceRequirements(limits={"nvidia.com/gpu": "1"},),
-    tolerations = [k8s.V1Toleration(key="nvidia.com/gpu", operator="Equal", value="1", effect="NoSchedule")],
+    tolerations = [k8s.V1Toleration(key="nvidia.com/gpu", operator="Exists", effect="NoSchedule")],
     task_id="pod-second_task",
 )
 
