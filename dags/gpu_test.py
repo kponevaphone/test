@@ -34,7 +34,6 @@ with DAG(
     # Exists
     # tolerations=[{'key': NODE_POOL, 'operator': 'Equal', 'value': 'true', 'effect': "NoSchedule"},
     #               {'key': "nvidia.com/gpu", 'operator': 'Equal','value': 'present', 'effect': "NoSchedule" }],
-    rin
     task_id="pod-second_task",
 )
 # sudo docker run --rm --runtime=nvidia --gpus all ubuntu nvidia-smi
