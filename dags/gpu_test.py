@@ -27,6 +27,9 @@ with DAG(
     arguments=["cn9.py"],
     env_vars={"NVIDIA_VISIBLE_DEVICES": "all", "NVIDIA_DRIVER_CAPABILITIES":"all" }, #"CUDA_VISIBLE_DEVICES":"0"
     # container_resources=k8s.V1ResourceRequirements(limits={"nvidia.com/gpu": 1},),
+    resources={ "limits": { "cpu": "500m", "memory": 1, "nvidia.com/gpu": 1, "ephemeral-storage": 1 } }
+
+    # container_resources=k8s.V1ResourceRequirements(limits={"nvidia.com/gpu": 1},),
     container_resources=k8s.V1ResourceRequirements(limits={"nvidia.com/gpu": 1}),
     tolerations = [k8s.V1Toleration(key="nvidia.com/gpu", operator="Exists", effect="NoExecute")],
     # Exists
