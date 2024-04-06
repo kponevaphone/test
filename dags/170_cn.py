@@ -31,4 +31,4 @@ with DAG(
     task_id="pod-second_task",
 )
 
-second_task
+first_task >> second_task
