@@ -42,7 +42,7 @@ with DAG(
         },
     ),
 
-    # tolerations = [k8s.V1Toleration(key="nvidia.com/gpu", value="true", operator="Equal", effect="NoSchedule")],
+    tolerations = [k8s.V1Toleration(key="nvidia.com/gpu", operator="Exists", effect="NoSchedule")],
     task_id="pod-second_task",
 )
 # sudo docker run --rm --runtime=nvidia --gpus all ubuntu nvidia-smi
