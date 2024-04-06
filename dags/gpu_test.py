@@ -22,11 +22,11 @@ with DAG(
 )  
   second_task = KubernetesPodOperator(
     name="kubernetes_operator", 
-    cluster_context='nvidia',
+    # cluster_context='nvidia',
     image="devubu:5000/cn:latest",
     cmds=["python"],
     arguments=["cn9.py"],
-    env_vars={"NVIDIA_VISIBLE_DEVICES": "all", "NVIDIA_DRIVER_CAPABILITIES":"all", },
+    # env_vars={"NVIDIA_VISIBLE_DEVICES": "all", "NVIDIA_DRIVER_CAPABILITIES":"all", },
     container_resources=k8s.V1ResourceRequirements(limits={"nvidia.com/gpu": "1"},),
     # tolerations = [k8s.V1Toleration(key="nvidia.com/gpu", value="present", operator="Exists", effect="NoSchedule")],
     task_id="pod-second_task",
