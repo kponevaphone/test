@@ -1,69 +1,39 @@
-# gpu_test.py
-# A simple Airflow DAG to check GPU availability.
-
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-# “AS IS” AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-# FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-# COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-# INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-# BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-# LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-# ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
-# POSSIBILITY OF SUCH DAMAGE.
-
+from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
 from datetime import datetime
-
 from airflow import DAG
-from airflow.operators.dummy import DummyOperator
-from airflow.decorators import task
-from airflow.utils.edgemodifier import Label
+from kubernetes.client import models as k8s
 
-# Docker library from PIP
-import docker
 
-# Simple DAG
 with DAG(
-    dag_id="gpu_test", 
-    schedule_interval="@daily", 
-    start_date=datetime(2022, 1, 1), 
-    catchup=False, 
-    tags=['gpu_test']
+    dag_id="gpu_test",
+    start_date=datetime(2024, 4, 4),
+    schedule='*/5 * * * *',
+    catchup=False,
+    max_active_runs=1,
+    # schedule_interval='*/2 * * * *', 
+    tags=["cam", "gpu_test"],
 ) as dag:
+  first_task = KubernetesPodOperator(
+    name="kubernetes_operator", 
+    image="devubu:5000/pr:latest",
+    cmds=["python"],
+    arguments=["pr9.py"],
+    env_vars={"NVIDIA_VISIBLE_DEVICES": "all", "NVIDIA_DRIVER_CAPABILITIES":"all", },
+    container_resources=k8s.V1ResourceRequirements(limits={"nvidia.com/gpu": "1"},),
+    tolerations = [k8s.V1Toleration(key="nvidia.com/gpu", operator="Exists", effect="NoSchedule")],
+    task_id="pod-first_task",
+)  
+  second_task = KubernetesPodOperator(
+    name="kubernetes_operator", 
+    runtime='nvidia'
+    image="devubu:5000/cn:latest",
+    cmds=["python"],
+    arguments=["cn9.py"],
+    env_vars={"NVIDIA_VISIBLE_DEVICES": "all", "NVIDIA_DRIVER_CAPABILITIES":"all", },
+    container_resources=k8s.V1ResourceRequirements(limits={"nvidia.com/gpu": "1"},),
+    tolerations = [k8s.V1Toleration(key="nvidia.com/gpu", operator="Exists", effect="NoSchedule")],
+    task_id="pod-second_task",
+)
+# sudo docker run --rm --runtime=nvidia --gpus all ubuntu nvidia-smi
 
-
-    @task(task_id='check_gpu')
-    def start_gpu_container(**kwargs):
-
-         # get the docker params from the environment
-         client = docker.from_env()
-          
-         # run the container
-         response = client.containers.run(
-
-             # The container you wish to call
-             'tensorflow/tensorflow:2.7.0-gpu',
-
-             # The command to run inside the container
-             'nvidia-smi',
-
-             # Passing the GPU access
-             device_requests=[
-                 docker.types.DeviceRequest(count=-1, capabilities=[['gpu']])
-             ]
-         )
-
-         return str(response)
-
-    check_gpu = start_gpu_container()
-
-
-    # Dummy functions
-    start = DummyOperator(task_id='start')
-    end   = DummyOperator(task_id='end')
-
-
-    # Create a simple workflow
-    start >> check_gpu >> end
+first_task >> second_task
