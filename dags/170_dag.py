@@ -27,9 +27,9 @@ with DAG(
     arguments=["cn9.py"],
     env_vars={"NVIDIA_VISIBLE_DEVICES": "all", "NVIDIA_DRIVER_CAPABILITIES":"all"},
     container_resources=k8s.V1ResourceRequirements(
-        limits={"memory": "250M", "cpu": "100m"},
+        limits={"memory": "250M", "cpu": "100m", "nvidia.com/gpu": "1"},
     ),
-    resources={'limit_memory': "250M", 'limit_cpu': "100m"},
+    # resources={'limit_memory': "250M", 'limit_cpu': "100m"},
     task_id="pod-second_task",
 )
 
