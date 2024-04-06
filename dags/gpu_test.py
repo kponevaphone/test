@@ -10,6 +10,7 @@ with DAG(
     schedule='*/5 * * * *',
     catchup=False,
     max_active_runs=1,
+    cluster_context='nvidia',
     # schedule_interval='*/2 * * * *', 
     tags=["cam", "gpu_test"],
 ) as dag:
@@ -25,7 +26,6 @@ with DAG(
     image="devubu:5000/cn:latest",
     cmds=["python"],
     arguments=["cn9.py"],
-    cluster_context='nvidia',
     env_vars={"NVIDIA_VISIBLE_DEVICES": "all", "NVIDIA_DRIVER_CAPABILITIES":"all", },
     container_resources=k8s.V1ResourceRequirements(limits={"nvidia.com/gpu": "1"},),
     tolerations = [k8s.V1Toleration(key="nvidia.com/gpu", value="present", operator="Exists", effect="NoSchedule")],
