@@ -9,7 +9,6 @@ resource_requirements = {
             containers=[
                 k8s.V1Container(
                     name="base",
-                    runtimeName="nvidia",
                     resources=k8s.V1ResourceRequirements(
                         requests={"cpu": 0.5, "memory": "1024Mi", "nvidia.com/gpu": 1},
                         limits={"cpu": 0.5, "memory": "1024Mi", "nvidia.com/gpu": 1}
