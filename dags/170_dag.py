@@ -30,7 +30,6 @@ with DAG(
         limits={"nvidia.com/gpu": "1"},
         # limits={"memory": "250M", "cpu": "100m", "nvidia.com/gpu": "1"},
     ),
-    resources={"nvidia.com/gpu": "1"},
     task_id="pod-second_task",
 )
 
