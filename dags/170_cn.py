@@ -1,23 +1,37 @@
 from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
 from datetime import datetime
 from airflow import DAG
+from kubernetes.client import models as k8s
 
 
 with DAG(
-    dag_id="170_cn",
-    start_date=datetime(2024, 4, 5),
+    dag_id="170_dag",
+    start_date=datetime(2024, 4, 4),
     schedule='*/5 * * * *',
     catchup=False,
     max_active_runs=1,
     # schedule_interval='*/2 * * * *', 
-    tags=["cn", "170_cn"],
+    tags=["cam", "170_dag"],
 ) as dag:
-  first_task_main = KubernetesPodOperator(
+  first_task = KubernetesPodOperator(
+    name="kubernetes_operator", 
+    image="devubu:5000/pr:latest",
+    cmds=["python"],
+    arguments=["pr9.py"],
+    task_id="pod-first_task",
+)
+  second_task = KubernetesPodOperator(
     name="kubernetes_operator", 
     image="devubu:5000/cn:latest",
     cmds=["python"],
     arguments=["cn9.py"],
-    task_id="run-pod-170cn",
+    env_vars={"NVIDIA_VISIBLE_DEVICES": "all", "NVIDIA_DRIVER_CAPABILITIES":"all"},
+    container_resources=k8s.V1ResourceRequirements(
+        limits={"nvidia.com/gpu": "1"},
+        # limits={"memory": "250M", "cpu": "100m", "nvidia.com/gpu": "1"},
+        resources={"nvidia.com/gpu": "1"},
+    ),
+    task_id="pod-second_task",
 )
 
-first_task_main
+first_task >> second_task
