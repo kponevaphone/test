@@ -26,11 +26,11 @@ import docker
 
 # Simple DAG
 with DAG(
-    "gpu_test", 
+    dag_id="gpu_test", 
     schedule_interval="@daily", 
     start_date=datetime(2022, 1, 1), 
     catchup=False, 
-    tags=['test']
+    tags=['gpu_test']
 ) as dag:
 
 
