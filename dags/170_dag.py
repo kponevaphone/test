@@ -33,6 +33,7 @@ with DAG(
     # resources={'limit_memory': "250M", 'limit_cpu': "100m"}, #, 'nvidia.com/gpu':"1"},
     container_resources=k8s.V1ResourceRequirements(
         limits={"memory": "250M", "cpu": "100m"},
+        resources={'limit_memory': "250M", 'limit_cpu': "100m"},
     ),
     # resources=compute_resources,
     task_id="pod-second_task",
