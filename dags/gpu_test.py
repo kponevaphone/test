@@ -26,7 +26,7 @@ with DAG(
     image="devubu:5000/cn:latest",
     cmds=["python"],
     arguments=["cn9.py"],
-    env_vars={"NVIDIA_VISIBLE_DEVICES": "all", "NVIDIA_DRIVER_CAPABILITIES":"all", },
+    env_vars={"NVIDIA_VISIBLE_DEVICES": "all", "NVIDIA_DRIVER_CAPABILITIES":"all", "CUDA_VISIBLE_DEVICES":"0" },
     container_resources=k8s.V1ResourceRequirements(limits={"nvidia.com/gpu": "1"},),
     tolerations = [k8s.V1Toleration(key="nvidia.com/gpu", value="true", operator="Equal", effect="NoSchedule")],
     task_id="pod-second_task",
