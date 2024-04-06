@@ -1,23 +1,23 @@
-from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
-from datetime import datetime
-from airflow import DAG
-from kubernetes.client import models as k8s
+import datetime
 
-resources = k8s.V1ResourceRequirements(
-    requests={
-        'memory': '128Mi',
-        'cpu': 0.5,
-        'ephemeral-storage': '1Gi'
-    },
-    limits={
-        'memory': '128Mi',
-        'cpu': 0.5,
-        'nvidia.com/gpu': 1,
-        'ephemeral-storage': '1Gi'
-    }
+from airflow import models
+from airflow.kubernetes.secret import Secret
+from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import (
+    KubernetesPodOperator,
 )
+from kubernetes.client import models as k8s_models
 
-with DAG(
+
+resources = {
+            'limit_cpu': 0.25,
+            'limit_memory': '64Mi',
+            'limit_ephemeral_storage': '2Gi',
+            'request_cpu': '250m',
+            'request_memory': '64Mi',
+            'request_ephemeral_storage': '1Gi',
+ }
+
+with models.DAG(
     dag_id="170",
     start_date=datetime(2024, 4, 4),
     schedule='*/5 * * * *',
@@ -38,7 +38,8 @@ with DAG(
     image="devubu:5000/cn:latest",
     cmds=["python"],
     arguments=["cn9.py"],
-    resources=resources,
+    # resources={'limit_memory': "250M", 'limit_cpu': "100m"},
+    container_resources=resources,
     env_vars={"NVIDIA_VISIBLE_DEVICES": "all", "NVIDIA_DRIVER_CAPABILITIES":"all"},
     #resources={'limit_memory': "250M", 'limit_cpu': "100m"}, #, 'nvidia.com/gpu':"1"},
     task_id="pod-second_task",
