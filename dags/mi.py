@@ -20,12 +20,11 @@ with DAG(
     arguments=["mi2.py"],
     task_id="pod-first_task",
 )  
-  # second_task = KubernetesPodOperator(
-    # name="kuboper", 
-    # name="mi", 
-    # image="devubu:5000/mi:latest",
-    # cmds=["python"],
-    # arguments=["mi2.py"],
-    # task_id="pod-second_task",
-# )
-first_task #>> second_task
+  second_task = KubernetesPodOperator(
+    name="yol", 
+    image="devubu:5000/cn:latest",
+    cmds=["python"],
+    arguments=["mi2.py"],
+    task_id="pod-second_task",
+)
+first_task >> second_task
