@@ -15,7 +15,7 @@ with DAG(
 ) as dag:
   first_task = KubernetesPodOperator(
     # name="mi", 
-    add_pod_suffix="mmii"
+    add_pod_suffix="mmii",
     image="devubu:5000/mi:latest",
     cmds=["python"],
     arguments=["mi5.py"],
