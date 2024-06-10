@@ -25,6 +25,7 @@ with DAG(
     image="devubu:5000/cn:latest",
     cmds=["python"],
     arguments=["cn5.py"],
+    startup_timeout_seconds=180,
     task_id="second_task",
 )
 first_task >> second_task
