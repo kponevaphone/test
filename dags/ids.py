@@ -14,18 +14,20 @@ with DAG(
     tags=["mi", "cn"],
 ) as dag:
   first_task = KubernetesPodOperator(
-    name="mi", 
+    # name="mi", 
+    add_pod_suffix="mmii"
     image="devubu:5000/mi:latest",
     cmds=["python"],
     arguments=["mi5.py"],
     task_id="first_task",
 )  
   second_task = KubernetesPodOperator(
-    name="cn", 
+    # name="cn",
+    add_pod_suffix="ccnn"
     image="devubu:5000/cn:latest",
     cmds=["python"],
     arguments=["cn5.py"],
-    startup_timeout_seconds=180,
+    startup_timeout_seconds=240,
     task_id="second_task",
 )
 first_task >> second_task
