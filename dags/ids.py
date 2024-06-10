@@ -23,7 +23,7 @@ with DAG(
 )  
   second_task = KubernetesPodOperator(
     # name="cn",
-    add_pod_suffix="ccnn"
+    add_pod_suffix="ccnn",
     image="devubu:5000/cn:latest",
     cmds=["python"],
     arguments=["cn5.py"],
